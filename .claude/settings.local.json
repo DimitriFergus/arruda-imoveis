@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($path = \"c:\\\\Users\\\\Flávia\\\\Desktop\\\\Arruda Imóveis\"; Get-ChildItem -Path $path -Directory | Where-Object {$_.Name -notmatch \"node_modules|\\\\.git\"} | Select-Object Name)",
+      "PowerShell(gh --version)",
+      "PowerShell(winget --version)",
+      "PowerShell(winget install --id GitHub.cli --silent --accept-package-agreements --accept-source-agreements)",
+      "PowerShell(Get-Content \"C:\\\\Users\\\\FLVIA~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Fl-via-Desktop-Arruda-Im-veis\\\\cbc20ec2-2c69-4f3d-a11c-40af0adb3b98\\\\tasks\\\\bsy7dhfko.output\" -Wait -Tail 20)",
+      "PowerShell(Get-Process winget -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Process msiexec -ErrorAction SilentlyContinue)"
+    ]
+  }
+}
