@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import { properties } from '../../data/properties'
 import EmpreendimentoModal from '../EmpreendimentoModal/EmpreendimentoModal'
 import './Empreendimentos.css'
@@ -27,6 +27,37 @@ function IconCar() {
       <path d="M16 8h4a1 1 0 011 1v8a1 1 0 01-1 1H1"/>
     </svg>
   )
+}
+
+function IconChevronLeft() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 18l-6-6 6-6"/>
+    </svg>
+  )
+}
+
+function IconChevronRight() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 18l6-6-6-6"/>
+    </svg>
+  )
+}
+
+function useVisibleCount() {
+  const [count, setCount] = useState(3)
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth < 600) setCount(1)
+      else if (window.innerWidth < 1000) setCount(2)
+      else setCount(3)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+  return count
 }
 
 function PropertyCard({ property, onSaibaMais }) {
@@ -82,6 +113,13 @@ function PropertyCard({ property, onSaibaMais }) {
 export default function Empreendimentos() {
   const ref = useRef(null)
   const [activeProperty, setActiveProperty] = useState(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const visibleCount = useVisibleCount()
+  const maxIndex = Math.max(0, properties.length - visibleCount)
+
+  useEffect(() => {
+    setCurrentIndex(i => Math.min(i, maxIndex))
+  }, [maxIndex])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -97,6 +135,11 @@ export default function Empreendimentos() {
     return () => observer.disconnect()
   }, [])
 
+  const prev = useCallback(() => setCurrentIndex(i => Math.max(0, i - 1)), [])
+  const next = useCallback(() => setCurrentIndex(i => Math.min(maxIndex, i + 1)), [maxIndex])
+
+  const translateX = -(currentIndex * (100 / properties.length))
+
   return (
     <section id="empreendimentos" className="empreendimentos" ref={ref}>
       <div className="section-header reveal">
@@ -108,15 +151,51 @@ export default function Empreendimentos() {
         </p>
       </div>
 
-      <div className="properties-grid">
-        {properties.map((p, i) => (
+      <div className="carousel-wrapper reveal">
+        <button
+          className="carousel-arrow carousel-prev"
+          onClick={prev}
+          disabled={currentIndex === 0}
+          aria-label="Imóvel anterior"
+        >
+          <IconChevronLeft />
+        </button>
+
+        <div className="carousel-viewport">
           <div
-            key={p.id}
-            className="reveal"
-            style={{ transitionDelay: `${i * 0.1}s` }}
+            className="carousel-track"
+            style={{ transform: `translateX(${translateX}%)` }}
           >
-            <PropertyCard property={p} onSaibaMais={setActiveProperty} />
+            {properties.map(p => (
+              <div
+                key={p.id}
+                className="carousel-slide"
+                style={{ flex: `0 0 calc(100% / ${visibleCount})` }}
+              >
+                <PropertyCard property={p} onSaibaMais={setActiveProperty} />
+              </div>
+            ))}
           </div>
+        </div>
+
+        <button
+          className="carousel-arrow carousel-next"
+          onClick={next}
+          disabled={currentIndex === maxIndex}
+          aria-label="Próximo imóvel"
+        >
+          <IconChevronRight />
+        </button>
+      </div>
+
+      <div className="carousel-dots reveal">
+        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+          <button
+            key={i}
+            className={`carousel-dot${i === currentIndex ? ' active' : ''}`}
+            onClick={() => setCurrentIndex(i)}
+            aria-label={`Ir para posição ${i + 1}`}
+          />
         ))}
       </div>
 
