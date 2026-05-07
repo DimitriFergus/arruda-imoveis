@@ -1,0 +1,145 @@
+export const properties = [
+  {
+    id: 1,
+    name: 'Alameda dos Ipês',
+    location: 'São Pedro da Aldeia – RJ',
+    badge: 'Lançamento',
+    badgeColor: '#FF6A00',
+    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80',
+      'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&q=80',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80',
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    ],
+    bedrooms: 3,
+    bedroomLabel: 'quartos',
+    bathrooms: 2,
+    livingRooms: 1,
+    hasGarden: true,
+    area: 85,
+    parking: 2,
+    price: 'R$ 320.000',
+    faqItems: [
+      {
+        q: 'Qual o preço do imóvel?',
+        a: 'O Alameda dos Ipês tem valores a partir de R$ 320.000. Há condições especiais de pagamento e possibilidade de subsídio para famílias qualificadas no Programa Minha Casa Minha Vida.',
+      },
+      {
+        q: 'Qual o valor mínimo de entrada?',
+        a: 'A entrada pode ser a partir de R$ 28.500 para famílias enquadradas no MCMV Faixa 3. No financiamento convencional, a entrada mínima é de 20% do valor do imóvel (R$ 64.000). O FGTS pode ser usado para complementar.',
+      },
+      {
+        q: 'Posso usar o FGTS?',
+        a: 'Sim! O saldo do FGTS pode ser utilizado como entrada ou para amortizar as parcelas do financiamento, desde que você tenha no mínimo 3 anos de trabalho com carteira assinada e não possua outro imóvel financiado pelo SFH.',
+      },
+      {
+        q: 'O empreendimento faz parte do Minha Casa Minha Vida?',
+        a: 'Sim! O Alameda dos Ipês está enquadrado no MCMV – Faixa 3 (renda familiar de até R$ 8.000/mês), com acesso a juros reduzidos a partir de 7,66% a.a. e possibilidade de subsídio do governo federal.',
+      },
+      {
+        q: 'Quando o empreendimento será entregue?',
+        a: 'A previsão de entrega é para o 2º semestre de 2026. Todos os compradores recebem atualizações mensais sobre o andamento da obra diretamente pelo WhatsApp.',
+      },
+      {
+        q: 'Como funciona o financiamento bancário?',
+        a: 'O financiamento é realizado pela Caixa Econômica Federal com prazo de até 35 anos e taxas a partir de 7,66% a.a. (MCMV). Nossa equipe realiza a simulação gratuitamente e acompanha todo o processo de aprovação de crédito.',
+      },
+      {
+        q: 'Quais são as áreas de lazer do condomínio?',
+        a: 'O Alameda dos Ipês conta com piscina adulto e infantil, churrasqueira, playground, academia ao ar livre e salão de festas. Cada unidade possui ainda quintal privativo exclusivo.',
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: 'Residencial Vista Verde',
+    location: 'Jardim das Flores, São Paulo – SP',
+    badge: 'Lançamento',
+    badgeColor: '#FF6A00',
+    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
+      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80',
+      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80',
+      'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80',
+    ],
+    bedrooms: 3,
+    bedroomLabel: 'quartos',
+    bathrooms: 2,
+    livingRooms: 1,
+    hasGarden: false,
+    area: 110,
+    parking: 2,
+    price: 'R$ 650.000',
+    faqItems: [
+      {
+        q: 'Qual o preço do imóvel?',
+        a: 'O Residencial Vista Verde tem valores a partir de R$ 650.000, com condições especiais de financiamento e possibilidade de negociação na entrada para compradores à vista.',
+      },
+      {
+        q: 'Qual o valor mínimo de entrada?',
+        a: 'A entrada mínima é de 20% do valor do imóvel (R$ 130.000). Parte do valor pode ser coberta pelo saldo de FGTS, se você atender aos requisitos da legislação.',
+      },
+      {
+        q: 'Posso usar o FGTS?',
+        a: 'Sim! O FGTS pode ser usado como entrada ou para amortização do saldo devedor, desde que o imóvel se enquadre nas regras do Sistema Financeiro de Habitação (SFH).',
+      },
+      {
+        q: 'O empreendimento aceita financiamento bancário?',
+        a: 'Sim! Trabalhamos com Caixa Econômica Federal, Banco do Brasil, Itaú, Bradesco e outros bancos parceiros. Nossa equipe cuida de toda a burocracia, sem custo extra para você.',
+      },
+      {
+        q: 'Quais são as áreas de lazer?',
+        a: 'O Residencial Vista Verde conta com piscina, academia, salão de festas, playground, quadra poliesportiva e guarita 24h — tudo para o conforto e segurança da sua família.',
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Alto da Colina',
+    location: 'Vila Nova, Campinas – SP',
+    badge: 'Pronto p/ morar',
+    badgeColor: '#1A7A4A',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80',
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
+      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80',
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    ],
+    bedrooms: 4,
+    bedroomLabel: 'quartos',
+    bathrooms: 3,
+    livingRooms: 2,
+    hasGarden: true,
+    area: 195,
+    parking: 3,
+    price: 'R$ 1.100.000',
+    faqItems: [
+      {
+        q: 'Qual o preço do imóvel?',
+        a: 'O Alto da Colina tem valores a partir de R$ 1.100.000. Há condições especiais para pagamento à vista com desconto, e financiamento disponível por bancos parceiros.',
+      },
+      {
+        q: 'O imóvel já está disponível para morar?',
+        a: 'Sim! O Alto da Colina está pronto para morar, com habite-se emitido e documentação completa regularizada. Após aprovação do financiamento, a mudança pode ser imediata.',
+      },
+      {
+        q: 'Qual o valor mínimo de entrada?',
+        a: 'A entrada mínima é de 20% do valor do imóvel (R$ 220.000). O saldo de FGTS pode ser utilizado para complementar o valor da entrada dentro das regras do SFH.',
+      },
+      {
+        q: 'Posso usar o FGTS?',
+        a: 'Sim! O FGTS pode ser utilizado como entrada ou para amortização, respeitando as regras do Sistema Financeiro de Habitação. Nossa equipe orienta todo o processo.',
+      },
+      {
+        q: 'Quais são os diferenciais do imóvel?',
+        a: 'O Alto da Colina possui 4 quartos (sendo 2 suítes), jardim privativo, 3 vagas de garagem, 2 salas integradas, varanda gourmet e acabamento de alto padrão. O condomínio conta com piscina, academia e quadra.',
+      },
+    ],
+  },
+]
