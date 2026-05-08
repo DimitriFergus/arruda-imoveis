@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { properties } from '../../data/properties'
 import EmpreendimentoModal from '../EmpreendimentoModal/EmpreendimentoModal'
 import './Empreendimentos.css'
@@ -29,6 +29,25 @@ function IconCar() {
   )
 }
 
+function IconGrid() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"/>
+      <rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/>
+      <rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+  )
+}
+
+function IconArrowRight() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  )
+}
+
 function IconChevronLeft() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -45,30 +64,12 @@ function IconChevronRight() {
   )
 }
 
-function useVisibleCount() {
-  const [count, setCount] = useState(3)
-  useEffect(() => {
-    const update = () => {
-      if (window.innerWidth < 600) setCount(1)
-      else if (window.innerWidth < 1000) setCount(2)
-      else setCount(3)
-    }
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
-  return count
-}
-
 function PropertyCard({ property, onSaibaMais }) {
   return (
     <article className="property-card">
       <div className="property-img">
         <img src={property.image} alt={property.name} loading="lazy" />
-        <span
-          className="property-badge"
-          style={{ background: property.badgeColor }}
-        >
+        <span className="property-badge" style={{ background: property.badgeColor }}>
           {property.badge}
         </span>
       </div>
@@ -85,15 +86,9 @@ function PropertyCard({ property, onSaibaMais }) {
         </p>
 
         <div className="property-features">
-          <span className="feature">
-            <IconBed /> {property.bedrooms} {property.bedroomLabel}
-          </span>
-          <span className="feature">
-            <IconArea /> {property.area} m²
-          </span>
-          <span className="feature">
-            <IconCar /> {property.parking} vagas
-          </span>
+          <span className="feature"><IconBed /> {property.bedrooms} {property.bedroomLabel}</span>
+          <span className="feature"><IconArea /> {property.area} m²</span>
+          <span className="feature"><IconCar /> {property.parking} vagas</span>
         </div>
 
         <div className="property-price">
@@ -110,35 +105,83 @@ function PropertyCard({ property, onSaibaMais }) {
   )
 }
 
-export default function Empreendimentos() {
+function SaibaMaisCard({ onVerTodos }) {
+  return (
+    <article
+      className="saiba-mais-card"
+      onClick={onVerTodos}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => e.key === 'Enter' && onVerTodos()}
+    >
+      <div className="smc-icon">
+        <IconGrid />
+      </div>
+      <h3>Ver Todos os Imóveis</h3>
+      <p>{properties.length} empreendimentos disponíveis no nosso portfólio completo</p>
+      <div className="smc-cta">
+        <span>Explorar portfólio</span>
+        <IconArrowRight />
+      </div>
+    </article>
+  )
+}
+
+const CARDS_PER_PAGE = 3
+
+export default function Empreendimentos({ onVerTodos }) {
   const ref = useRef(null)
   const [activeProperty, setActiveProperty] = useState(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const visibleCount = useVisibleCount()
-  const maxIndex = Math.max(0, properties.length - visibleCount)
+  const [page, setPage] = useState(0)
 
-  useEffect(() => {
-    setCurrentIndex(i => Math.min(i, maxIndex))
-  }, [maxIndex])
+  // 11 imóveis + 1 card "Ver Todos" = 12 itens (4 páginas × 3)
+  const mainProperties = properties.slice(0, 11)
+  const totalItems = mainProperties.length + 1 // +1 para o card "Ver Todos"
+  const totalPages = Math.ceil(totalItems / CARDS_PER_PAGE)
 
+  const prev = () => setPage(p => Math.max(0, p - 1))
+  const next = () => setPage(p => Math.min(totalPages - 1, p + 1))
+
+  const startIndex = page * CARDS_PER_PAGE
+
+  // Monta os itens da página atual
+  const pageItems = []
+  for (let i = startIndex; i < startIndex + CARDS_PER_PAGE; i++) {
+    if (i < mainProperties.length) {
+      pageItems.push({ type: 'property', data: mainProperties[i] })
+    } else if (i === mainProperties.length) {
+      pageItems.push({ type: 'saibaMais' })
+    }
+  }
+
+  // Animação do header (só uma vez)
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible')
-          observer.unobserve(e.target)
-        }
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }
       }),
       { threshold: 0.12 }
     )
-    ref.current?.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+    ref.current?.querySelectorAll('.section-header.reveal').forEach(el => observer.observe(el))
     return () => observer.disconnect()
   }, [])
 
-  const prev = useCallback(() => setCurrentIndex(i => Math.max(0, i - 1)), [])
-  const next = useCallback(() => setCurrentIndex(i => Math.min(maxIndex, i + 1)), [maxIndex])
-
-  const translateX = -(currentIndex * (100 / properties.length))
+  // Re-observa os cards quando a página do carrossel muda
+  useEffect(() => {
+    const cards = ref.current?.querySelectorAll('.properties-grid .reveal')
+    if (!cards) return
+    cards.forEach(el => {
+      el.classList.remove('visible')
+    })
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }
+      }),
+      { threshold: 0.08 }
+    )
+    cards.forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [page])
 
   return (
     <section id="empreendimentos" className="empreendimentos" ref={ref}>
@@ -151,50 +194,48 @@ export default function Empreendimentos() {
         </p>
       </div>
 
-      <div className="carousel-wrapper reveal">
+      <div className="carousel-wrapper">
         <button
-          className="carousel-arrow carousel-prev"
+          className="carousel-arrow carousel-arrow--left"
           onClick={prev}
-          disabled={currentIndex === 0}
-          aria-label="Imóvel anterior"
+          disabled={page === 0}
+          aria-label="Anterior"
         >
           <IconChevronLeft />
         </button>
 
-        <div className="carousel-viewport">
-          <div
-            className="carousel-track"
-            style={{ transform: `translateX(${translateX}%)` }}
-          >
-            {properties.map(p => (
-              <div
-                key={p.id}
-                className="carousel-slide"
-                style={{ flex: `0 0 calc(100% / ${visibleCount})` }}
-              >
-                <PropertyCard property={p} onSaibaMais={setActiveProperty} />
+        <div className="properties-grid">
+          {pageItems.map((item, i) =>
+            item.type === 'property' ? (
+              <div key={item.data.id} className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <PropertyCard property={item.data} onSaibaMais={setActiveProperty} />
               </div>
-            ))}
-          </div>
+            ) : (
+              <div key="saiba-mais" className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <SaibaMaisCard onVerTodos={onVerTodos} />
+              </div>
+            )
+          )}
         </div>
 
         <button
-          className="carousel-arrow carousel-next"
+          className="carousel-arrow carousel-arrow--right"
           onClick={next}
-          disabled={currentIndex === maxIndex}
-          aria-label="Próximo imóvel"
+          disabled={page === totalPages - 1}
+          aria-label="Próximo"
         >
           <IconChevronRight />
         </button>
       </div>
 
-      <div className="carousel-dots reveal">
-        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+      {/* Indicadores de página */}
+      <div className="carousel-dots">
+        {Array.from({ length: totalPages }).map((_, i) => (
           <button
             key={i}
-            className={`carousel-dot${i === currentIndex ? ' active' : ''}`}
-            onClick={() => setCurrentIndex(i)}
-            aria-label={`Ir para posição ${i + 1}`}
+            className={`carousel-dot${i === page ? ' active' : ''}`}
+            onClick={() => setPage(i)}
+            aria-label={`Página ${i + 1}`}
           />
         ))}
       </div>
