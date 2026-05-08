@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
 import { properties } from '../../data/properties'
-import EmpreendimentoModal from '../EmpreendimentoModal/EmpreendimentoModal'
 import './Empreendimentos.css'
 
 function IconBed() {
@@ -129,9 +128,8 @@ function SaibaMaisCard({ onVerTodos }) {
 
 const CARDS_PER_PAGE = 3
 
-export default function Empreendimentos({ onVerTodos }) {
+export default function Empreendimentos({ onVerTodos, onSaibaMais }) {
   const ref = useRef(null)
-  const [activeProperty, setActiveProperty] = useState(null)
   const [page, setPage] = useState(0)
 
   // 11 imóveis + 1 card "Ver Todos" = 12 itens (4 páginas × 3)
@@ -208,7 +206,7 @@ export default function Empreendimentos({ onVerTodos }) {
           {pageItems.map((item, i) =>
             item.type === 'property' ? (
               <div key={item.data.id} className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
-                <PropertyCard property={item.data} onSaibaMais={setActiveProperty} />
+                <PropertyCard property={item.data} onSaibaMais={onSaibaMais} />
               </div>
             ) : (
               <div key="saiba-mais" className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
@@ -240,12 +238,6 @@ export default function Empreendimentos({ onVerTodos }) {
         ))}
       </div>
 
-      {activeProperty && (
-        <EmpreendimentoModal
-          property={activeProperty}
-          onClose={() => setActiveProperty(null)}
-        />
-      )}
     </section>
   )
 }

@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { properties } from '../../data/properties'
-import EmpreendimentoModal from '../EmpreendimentoModal/EmpreendimentoModal'
 import './TodosImoveis.css'
 
 function IconBed() {
@@ -74,8 +73,7 @@ function PropertyCard({ property, onSaibaMais }) {
   )
 }
 
-export default function TodosImoveis({ onVoltar }) {
-  const [activeProperty, setActiveProperty] = useState(null)
+export default function TodosImoveis({ onVoltar, onSaibaMais }) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -121,17 +119,11 @@ export default function TodosImoveis({ onVoltar }) {
             className="ti-reveal"
             style={{ transitionDelay: `${(i % 3) * 0.1}s` }}
           >
-            <PropertyCard property={p} onSaibaMais={setActiveProperty} />
+            <PropertyCard property={p} onSaibaMais={onSaibaMais} />
           </div>
         ))}
       </div>
 
-      {activeProperty && (
-        <EmpreendimentoModal
-          property={activeProperty}
-          onClose={() => setActiveProperty(null)}
-        />
-      )}
     </div>
   )
 }
